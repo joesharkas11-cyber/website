@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Community Photo Gallery | Share & Celebrate Together</title>
+    <!-- Google Fonts & simple CSS reset -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #fbfaf8;
+            color: #1e2a2f;
+            line-height: 1.5;
+            scroll-behavior: smooth;
+        }
+
+        /* container utility */
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 32px;
+        }
+
+        /* buttons & interactive */
+        .btn-primary {
+            background: #f07c3c;
+            color: white;
+            border: none;
+            padding: 12px 28px;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+        }
+        .btn-primary:hover {
+            background: #d45f2a;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(240,124,60,0.2);
+        }
+        .btn-outline {
+            background: transparent;
+            border: 2px solid #f07c3c;
+            color: #f07c3c;
+            padding: 10px 24px;
+            border-radius: 40px;
+            font-weight: 600;
+            transition: 0.2s;
+            cursor: pointer;
+        }
+        .btn-outline:hover {
+            background: #f07c3c;
+            color: white;
+        }
+
+        /* navbar */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+            flex-wrap: wrap;
+        }
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #f07c3c, #e25e2c);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: -0.5px;
+        }
+        .nav-links {
+            display: flex;
+            gap: 32px;
+            font-weight: 500;
+        }
+        .nav-links a {
+            text-decoration: none;
+            color: #2c3e40;
+            transition: 0.2s;
+        }
+        .nav-links a:hover {
+            color: #f07c3c;
+        }
+
+        /* hero */
+        .hero {
+            padding: 60px 0 40px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 40px;
+        }
+        .hero-content {
+            flex: 1;
+        }
+        .hero-badge {
+            background: #ffe6db;
+            color: #f07c3c;
+            display: inline-block;
+            padding: 6px 14px;
+            border-radius: 40px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+        .hero-content h1 {
+            font-size: 3.3rem;
+            font-weight: 800;
+            line-height: 1.2;
+            margin-bottom: 20px;
+            color: #1e2a2f;
+        }
+        .hero-content p {
+            font-size: 1.2rem;
+            color: #4a5b5f;
+            margin-bottom: 30px;
+            max-width: 550px;
+        }
+        .hero-stats {
+            display: flex;
+            gap: 28px;
+            margin-top: 20px;
+        }
+        .hero-stats div span {
+            font-weight: 800;
+            font-size: 1.5rem;
+            display: block;
+            color: #f07c3c;
+        }
+        .hero-image {
+            flex: 1;
+            background: #fff5ef;
+            border-radius: 40px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 20px 35px -12px rgba(0,0,0,0.1);
+        }
+        .hero-image i {
+            font-size: 8rem;
+            color: #f07c3c;
+            opacity: 0.8;
+        }
+        .demo-grid {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        .demo-grid span {
+            background: #ddd0c4;
+            width: 70px;
+            height: 70px;
+            border-radius: 20px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: #fce7db;
+            color: #b95a2a;
+            font-size: 1.8rem;
+        }
+
+        /* section style */
+        section {
+            padding: 80px 0;
+            border-bottom: 1px solid #f0eae4;
+        }
+        .section-title {
+            font-size: 2.2rem;
+            font-weight: 800;
+            margin-bottom: 20px;
+            text-align: center;
+            color: #1e2a2f;
+        }
+        .section-sub {
+            text-align: center;
+            max-width: 700px;
+            margin: 0 auto 48px auto;
+            color: #5f7378;
+            font-size: 1.1rem;
+        }
+
+        /* cards grid */
+        .cards-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            justify-content: center;
+        }
+        .card {
+            background: white;
+            border-radius: 28px;
+            padding: 32px 24px;
+            flex: 1 1 280px;
+            box-shadow: 0 12px 28px rgba(0,0,0,0.04);
+            transition: 0.25s;
+            text-align: center;
+            border: 1px solid #f4ede7;
+        }
+        .card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 20px 30px -12px rgba(0,0,0,0.1);
+        }
+        .card-icon {
+            font-size: 2.6rem;
+            background: #fef2ea;
+            width: 70px;
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 30px;
+            margin: 0 auto 20px;
+            color: #f07c3c;
+        }
+        .card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 12px;
+        }
+        .card p {
+            color: #5d6f74;
+        }
+
+        /* before after */
+        .comparison {
+            background: #fef8f3;
+            border-radius: 48px;
+            padding: 40px 32px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 40px;
+            justify-content: center;
+        }
+        .comp-card {
+            flex: 1;
+            background: white;
+            border-radius: 32px;
+            padding: 30px 24px;
+            text-align: center;
+            box-shadow: 0 8px 18px rgba(0,0,0,0.05);
+        }
+        .comp-before {
+            border-left: 6px solid #cbd5e1;
+        }
+        .comp-after {
+            border-left: 6px solid #f07c3c;
+        }
+        .vs-badge {
+            font-size: 1.8rem;
+            font-weight: 800;
+            background: #1e2a2f;
+            color: white;
+            padding: 8px 20px;
+            border-radius: 60px;
+            align-self: center;
+        }
+
+        /* steps */
+        .steps {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        .step-item {
+            background: white;
+            border-radius: 32px;
+            padding: 30px;
+            flex: 1;
+            min-width: 230px;
+            text-align: center;
+            box-shadow: 0 6px 14px rgba(0,0,0,0.02);
+            border: 1px solid #f1e8e1;
+        }
+        .step-number {
+            background: #f07c3c20;
+            width: 50px;
+            height: 50px;
+            line-height: 50px;
+            border-radius: 30px;
+            font-weight: 800;
+            font-size: 1.6rem;
+            margin: 0 auto 20px;
+            color: #f07c3c;
+        }
+
+        /* tech badges */
+        .tech-stack {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 18px;
+            margin-top: 30px;
+        }
+        .tech-badge {
+            background: white;
+            border-radius: 100px;
+            padding: 12px 28px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            border: 1px solid #efded2;
+        }
+        .tech-badge i {
+            font-size: 1.5rem;
+            color: #f07c3c;
+        }
+
+        /* roadmap */
+        .roadmap {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
+        .road-item {
+            background: #fef9f5;
+            padding: 20px 24px;
+            border-radius: 28px;
+            flex: 1 1 220px;
+            text-align: center;
+        }
+
+        /* footer / CTA */
+        .cta-section {
+            background: #1e2a2f;
+            color: white;
+            border-radius: 48px;
+            padding: 60px 40px;
+            text-align: center;
+            margin: 40px 0 60px;
+        }
+        .cta-section h2 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+        }
+        .cta-section .btn-primary {
+            background: #faa75e;
+            color: #1e2a2f;
+            margin-top: 16px;
+        }
+        footer {
+            text-align: center;
+            padding: 32px 0 48px;
+            color: #7e8c8f;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 800px) {
+            .hero-content h1 { font-size: 2.4rem; }
+            .navbar { flex-direction: column; gap: 16px; }
+            .nav-links { gap: 20px; flex-wrap: wrap; justify-content: center; }
+            .container { padding: 0 24px; }
+            section { padding: 60px 0; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="logo"><i class="fas fa-images" style="color:#f07c3c;"></i> CommunityGallery</div>
+        <div class="nav-links">
+            <a href="#overview">Overview</a>
+            <a href="#features">Features</a>
+            <a href="#howitworks">How it works</a>
+            <a href="#roadmap">Roadmap</a>
+        </div>
+        <div>
+            <button class="btn-outline" id="demoLoginBtn" style="margin-right: 10px;"><i class="fas fa-user"></i> Sign in</button>
+            <button class="btn-primary" id="getStartedBtn"><i class="fas fa-cloud-upload-alt"></i> Get Started</button>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <div class="hero">
+        <div class="hero-content">
+            <div class="hero-badge"><i class="fas fa-camera"></i> Centralized · Community First</div>
+            <h1>Organize, Share & Celebrate<br> Community Moments</h1>
+            <p>A unified photo hub that brings people together — no more scattered memories. Upload, explore, and engage in one beautiful space.</p>
+            <button class="btn-primary" id="heroDemoBtn"><i class="fas fa-rocket"></i> Explore Gallery Demo</button>
+            <div class="hero-stats">
+                <div><span>1000+</span> Shared Albums</div>
+                <div><span>500+</span> Active Communities</div>
+                <div><span>⭐ 4.9</span> User Rating</div>
+            </div>
+        </div>
+        <div class="hero-image">
+            <i class="fas fa-camera-retro"></i>
+            <div class="demo-grid">
+                <span><i class="fas fa-tree"></i></span>
+                <span><i class="fas fa-people-arrows"></i></span>
+                <span><i class="fas fa-calendar-alt"></i></span>
+            </div>
+            <p style="margin-top: 18px; font-weight: 500;">✨ Live community feed</p>
+        </div>
+    </div>
+</div>
+
+<!-- Overview Section (problem + solution) -->
+<section id="overview">
+    <div class="container">
+        <div class="section-title">The Challenge We Solve</div>
+        <div class="section-sub">Fragmented memories? Lost in endless chats & devices? We fix that.</div>
+        <div class="cards-grid" style="margin-bottom: 40px;">
+            <div class="card"><div class="card-icon"><i class="fas fa-photo-video"></i></div><h3>Fragmented Storage</h3><p>Photos scattered across WhatsApp, iCloud, Google Photos & devices — no single source of truth.</p></div>
+            <div class="card"><div class="card-icon"><i class="fas fa-search"></i></div><h3>No Organization</h3><p>No tagging, no categories, endless scrolling to find that special moment.</p></div>
+            <div class="card"><div class="card-icon"><i class="fas fa-clock"></i></div><h3>Time Wasted</h3><p>Hours lost searching for specific memories from past events.</p></div>
+        </div>
+        <div class="comparison">
+            <div class="comp-card comp-before">
+                <i class="fas fa-times-circle" style="font-size: 2.5rem; color:#c53030;"></i>
+                <h3 style="margin: 16px 0;">❌ Before</h3>
+                <p>📱 Messaging apps chaos<br>💾 Local device limits<br>🔍 No searchable structure<br>⏳ Painful retrieval</p>
+            </div>
+            <div class="vs-badge">VS</div>
+            <div class="comp-card comp-after">
+                <i class="fas fa-check-circle" style="font-size: 2.5rem; color:#f07c3c;"></i>
+                <h3 style="margin: 16px 0;">✅ After — Community Gallery</h3>
+                <p>📂 Centralized repository<br>🏷️ Smart organization & tags<br>⚡ Instant retrieval<br>🌍 Access anytime, anywhere</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Key Features Section -->
+<section id="features">
+    <div class="container">
+        <div class="section-title">Powerful Features, Seamless Experience</div>
+        <div class="section-sub">Everything you need to bring your community closer through photos.</div>
+        <div class="cards-grid">
+            <div class="card"><div class="card-icon"><i class="fas fa-upload"></i></div><h3>Seamless Uploads</h3><p>Drag & drop or select images. Auto-compression & instant organization.</p></div>
+            <div class="card"><div class="card-icon"><i class="fas fa-lock"></i></div><h3>Secure Authentication</h3><p>Role-based login, personalized dashboards & privacy controls.</p></div>
+            <div class="card"><div class="card-icon"><i class="fas fa-comments"></i></div><h3>Community Engagement</h3><p>Comment, like, and discuss moments. Celebrate memories together.</p></div>
+            <div class="card"><div class="card-icon"><i class="fas fa-tachometer-alt"></i></div><h3>High Performance</h3><p>Lightning fast gallery browsing & optimized architecture.</p></div>
+        </div>
+    </div>
+</section>
+
+<!-- How It Works: 3 Steps -->
+<section id="howitworks">
+    <div class="container">
+        <div class="section-title">Simple Three‑Step Journey</div>
+        <div class="section-sub">Get started in minutes and enjoy the full experience.</div>
+        <div class="steps">
+            <div class="step-item"><div class="step-number">1</div><i class="fas fa-sign-in-alt" style="font-size: 2rem; color:#f07c3c;"></i><h3 style="margin: 16px 0 8px;">Authenticate</h3><p>Securely login or register to access your personal gallery dashboard.</p></div>
+            <div class="step-item"><div class="step-number">2</div><i class="fas fa-images" style="font-size: 2rem; color:#f07c3c;"></i><h3 style="margin: 16px 0 8px;">Upload & Organize</h3><p>Select photos, add metadata — auto-categorized into community albums.</p></div>
+            <div class="step-item"><div class="step-number">3</div><i class="fas fa-users" style="font-size: 2rem; color:#f07c3c;"></i><h3 style="margin: 16px 0 8px;">Explore & Engage</h3><p>Browse shared gallery, comment & celebrate memories together.</p></div>
+        </div>
+    </div>
+</section>
+
+<!-- Technology Stack -->
+<section>
+    <div class="container">
+        <div class="section-title">Built With Modern Web Standards</div>
+        <div class="section-sub">Scalable, responsive, future-ready architecture.</div>
+        <div class="tech-stack">
+            <div class="tech-badge"><i class="fab fa-html5"></i> HTML5</div>
+            <div class="tech-badge"><i class="fab fa-css3-alt"></i> CSS3</div>
+            <div class="tech-badge"><i class="fab fa-js"></i> JavaScript (ES6+)</div>
+            <div class="tech-badge"><i class="fas fa-database"></i> Cloud Database</div>
+            <div class="tech-badge"><i class="fas fa-cloud-upload-alt"></i> REST API</div>
+        </div>
+        <div class="cards-grid" style="margin-top: 48px;">
+            <div class="card"><div class="card-icon"><i class="fas fa-chart-line"></i></div><h3>High Performance</h3><p>Optimized lazy loading & CDN delivery for instant image browsing.</p></div>
+            <div class="card"><div class="card-icon"><i class="fas fa-clock"></i></div><h3>Time Savings</h3><p>Centralized search reduces time spent hunting for memories by 80%.</p></div>
+            <div class="card"><div class="card-icon"><i class="fas fa-heart"></i></div><h3>Stronger Bonds</h3><p>Shared galleries foster interaction and community connection.</p></div>
+        </div>
+    </div>
+</section>
+
+<!-- Future Roadmap -->
+<section id="roadmap">
+    <div class="container">
+        <div class="section-title">Roadmap: Built to Grow</div>
+        <div class="section-sub">We're constantly evolving to deliver more value.</div>
+        <div class="roadmap">
+            <div class="road-item"><i class="fas fa-smile-wink" style="font-size: 2.2rem; color:#f07c3c;"></i><h3 style="margin: 12px 0;">Photo Reactions</h3><p>Express yourself with emoji reactions & love.</p></div>
+            <div class="road-item"><i class="fas fa-filter" style="font-size: 2.2rem; color:#f07c3c;"></i><h3>Advanced Filters</h3><p>Date, location, event-based smart filters.</p></div>
+            <div class="road-item"><i class="fas fa-robot" style="font-size: 2.2rem; color:#f07c3c;"></i><h3>AI-Powered Tagging</h3><p>Auto face recognition & object detection.</p></div>
+            <div class="road-item"><i class="fas fa-mobile-alt" style="font-size: 2.2rem; color:#f07c3c;"></i><h3>Native Mobile App</h3><p>iOS & Android apps for on-the-go sharing.</p></div>
+        </div>
+    </div>
+</section>
+
+<!-- Call to action & interactive demo mockup -->
+<div class="container">
+    <div class="cta-section">
+        <h2>Ready to centralize your community memories?</h2>
+        <p style="margin-bottom: 8px; opacity: 0.9;">Join thousands of users who transformed scattered photos into a vibrant community gallery.</p>
+        <button class="btn-primary" id="finalCtaBtn" style="background: #ffbc7a; color:#2c2b28;"><i class="fas fa-arrow-right"></i> Start your gallery now</button>
+        <p style="margin-top: 24px; font-size: 0.8rem;">✨ Free for community groups • No credit card required</p>
+    </div>
+</div>
+
+<!-- Interactive demo modal (simple simulation) -->
+<div id="demoModal" style="display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.7); align-items: center; justify-content: center; z-index: 1000;">
+    <div style="background: white; max-width: 480px; width: 90%; border-radius: 48px; padding: 28px 24px; text-align: center; position: relative;">
+        <span id="closeModal" style="position: absolute; right: 22px; top: 18px; font-size: 28px; cursor: pointer;">&times;</span>
+        <i class="fas fa-camera" style="font-size: 48px; color:#f07c3c;"></i>
+        <h2 style="margin: 16px 0;">✨ Community Gallery Demo</h2>
+        <p>This is a preview of our centralized platform. Imagine uploading event photos, organizing albums, and receiving comments from friends.</p>
+        <div style="background:#f8f1ea; border-radius: 28px; padding: 16px; margin: 20px 0;">
+            <i class="fas fa-image"></i> <strong>“Summer Festival 2025”</strong><br> 24 photos • 12 comments • 5 reactions
+        </div>
+        <button class="btn-primary" id="mockUploadBtn" style="background:#f07c3c;">Upload demo photo <i class="fas fa-smile-wink"></i></button>
+        <p id="toastMsg" style="margin-top: 16px; font-size: 0.8rem; color: green;"></p>
+        <p style="margin-top: 12px; font-size: 0.75rem;">Full version: authentication, albums & real interactions.</p>
+    </div>
+</div>
+
+<script>
+    // interactive modal
+    const modal = document.getElementById('demoModal');
+    const openModalBtns = document.querySelectorAll('#heroDemoBtn, #getStartedBtn, #finalCtaBtn, #demoLoginBtn');
+    const closeModalSpan = document.getElementById('closeModal');
+    const mockUpload = document.getElementById('mockUploadBtn');
+    const toastMsg = document.getElementById('toastMsg');
+    
+    function showModal() {
+        modal.style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+        if(toastMsg) toastMsg.innerText = '';
+    }
+    function hideModal() {
+        modal.style.display = 'none';
+        document.body.style.overflow = '';
+    }
+    
+    openModalBtns.forEach(btn => {
+        if(btn) btn.addEventListener('click', (e) => {
+            e.preventDefault();
+            showModal();
+        });
+    });
+    
+    if(closeModalSpan) closeModalSpan.addEventListener('click', hideModal);
+    window.addEventListener('click', (e) => {
+        if(e.target === modal) hideModal();
+    });
+    
+    if(mockUpload) {
+        mockUpload.addEventListener('click', () => {
+            toastMsg.innerHTML = '📸 Demo photo uploaded! (simulated) Your gallery would now show this memory.';
+            setTimeout(() => {
+                toastMsg.style.opacity = '0';
+                setTimeout(() => toastMsg.innerHTML = '', 800);
+                toastMsg.style.opacity = '1';
+            }, 1800);
+        });
+    }
+    
+    // Additional smooth navigation for internal links
+    document.querySelectorAll('.nav-links a').forEach(anchor => {
+        anchor.addEventListener('click', function(e) {
+            const targetId = this.getAttribute('href');
+            if(targetId && targetId.startsWith('#')) {
+                e.preventDefault();
+                const targetElem = document.querySelector(targetId);
+                if(targetElem) {
+                    targetElem.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            }
+        });
+    });
+    
+    // extra small hover demo stats animation
+    console.log("Community Photo Gallery website ready — built with passion for shared memories");
+</script>
+
+<!-- Footer -->
+<footer>
+    <div class="container">
+        <p><i class="fas fa-camera-retro"></i> Community Photo Gallery — A centralized platform for organizing, sharing, and celebrating community moments</p>
+        <p style="margin-top: 12px;">© 2025 Youssef Sharkas | Mazen Masoud | Moemen Mamdouh | Yasien Ehab | Hamza Hazem • All concepts and design</p>
+        <div style="margin-top: 12px;">
+            <i class="fab fa-twitter" style="margin:0 8px; cursor:pointer;"></i>
+            <i class="fab fa-instagram" style="margin:0 8px; cursor:pointer;"></i>
+            <i class="fab fa-github" style="margin:0 8px; cursor:pointer;"></i>
+        </div>
+    </div>
+</footer>
+
+</body>
+</html>
